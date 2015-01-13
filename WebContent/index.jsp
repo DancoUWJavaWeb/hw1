@@ -7,6 +7,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UW Java Web App Development Homework 1</title>
+<script type="text/javascript" src="uwjava_functions.js" >
+</script>
+
 <style>
 table, th, td {
     border: 1px solid black;
@@ -24,19 +27,23 @@ table#t01 th {
 } 
 </style>
 
-<script type="text/javascript" src="uwjava_functions.js" >
-</script>
 </head>
 <body onload="addRowHandlers()">
 <%@ include file="book_data.jsp" %>
-<%!
-	Map<String,Book> bookMap = new HashMap<String,Book>();
+
+<%
+	Map<String,Book> bookMap = new HashMap<String,Book>(); 
 	
+	// Load the map from the array
 	for (String[] book : books) {
 		bookMap.put(book[0], new Book(book));
 	}
-%>
-<%
+	
+	// Write the map contents to the page
+	for (Book book : bookMap.values()) {
+		out.println(book + "<br>");
+	}
+
 	String username = null;
 	String name = request.getParameter("username");
 	if (name != null && name.length() > 0) {
@@ -68,6 +75,21 @@ table#t01 th {
 			}
 		}
 	}
+	
+	boolean isSciFiSelected = true;
+	boolean isClassicsSelected = true;
+	boolean isFantasySelected = true;
+	String[] genresSelected = request.getParameterValues("genre") != null ? 
+			request.getParameterValues("genre") : 
+			new String[] {"classics", "sci-fi", "fantasy"};
+	List<String> genres = Arrays.asList(genresSelected);
+	if (genresSelected != null && genresSelected.length > 0) {
+		genres = Arrays.asList(genresSelected);
+		isSciFiSelected = genres.contains("sci-fi");
+		isClassicsSelected = genres.contains("classic");
+		isFantasySelected = genres.contains("fantasy");
+	}
+
 %>
 
 	<p>Hello <%= username == null ? "New User" : username %></p>
@@ -85,6 +107,7 @@ table#t01 th {
 	</form>
 <%} %>
 
+
 <p>Books available for purchase:</p>
 <table id="t01">
 <%
@@ -93,13 +116,23 @@ NumberFormat format = new DecimalFormat("#0.00");
 
 for (String[] arr : books) {
 	Book book = new Book(arr);
+	if (!genres.contains(book.genre)) {
+		continue;
+	}
     out.print("<tr>");
-    out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td><td onClick=\"\"></td>", 
+    out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td><td><input type=\"submit\" name=\"purchase\" value=\"Add to Cart\"/></td>", 
     		book.title, format.format(book.price)));
     out.println("</tr>");
 }
 %>
 </table>
+
+<form action="index.jsp">
+	<input type="checkbox" name="genre" value="sci-fi" <%= isSciFiSelected ? "checked" : "" %>>SciFi
+	<input type="checkbox" name="genre" value="classic" <%= isClassicsSelected ? "checked" : "" %>>Classics
+	<input type="checkbox" name="genre" value="fantasy" <%= isFantasySelected ? "checked" : "" %>>Fantasy<br>
+	<input type="submit" value="Filter Genre" >
+</form>
 
 <% if (username != null) { %>
 	<form method=POST action="searchByTitle.jsp">
