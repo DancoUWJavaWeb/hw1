@@ -16,3 +16,7 @@ function addRowHandlers() {
         currentRow.onclick = createClickHandler(currentRow);
     }
 }
+
+function addToCart(bookTitle) {
+	
+}

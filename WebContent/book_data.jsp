@@ -6,12 +6,12 @@ class Book {
 	double price;
 	String description;
 	
-	Book(String[] strs) {
-		this.title = strs[0];
-		this.author = strs[1];
-		this.genre = strs[2];
-		this.price = Double.parseDouble(strs[3]);
-		this.description = strs[4];
+	Book(String[] book) {
+		this.title = book[0];
+		this.author = book[1];
+		this.genre = book[2];
+		this.price = Double.parseDouble(book[3]);
+		this.description = book[4];
 	}
 }
 %>

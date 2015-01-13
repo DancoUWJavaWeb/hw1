@@ -29,6 +29,13 @@ table#t01 th {
 </head>
 <body onload="addRowHandlers()">
 <%@ include file="book_data.jsp" %>
+<%!
+	Map<String,Book> bookMap = new HashMap<String,Book>();
+	
+	for (String[] book : books) {
+		bookMap.put(book[0], new Book(book));
+	}
+%>
 <%
 	String username = null;
 	String name = request.getParameter("username");
@@ -87,7 +94,7 @@ NumberFormat format = new DecimalFormat("#0.00");
 for (String[] arr : books) {
 	Book book = new Book(arr);
     out.print("<tr>");
-    out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td>", 
+    out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td><td onClick=\"\"></td>", 
     		book.title, format.format(book.price)));
     out.println("</tr>");
 }
