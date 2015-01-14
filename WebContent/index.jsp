@@ -40,10 +40,11 @@ table#t01 th {
 	}
 	
 	// Write the map contents to the page
-	for (Book book : bookMap.values()) {
+/* 	for (Book book : bookMap.values()) {
 		out.println(book + "<br>");
 	}
-
+ */
+ 
 	String username = null;
 	String name = request.getParameter("username");
 	if (name != null && name.length() > 0) {
@@ -120,8 +121,9 @@ for (String[] arr : books) {
 		continue;
 	}
     out.print("<tr>");
+    String anchor = String.format("<a href=\"details.jsp?title=%s\">%s</a>", book.title, book.title);
     out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td><td><input type=\"submit\" name=\"purchase\" value=\"Add to Cart\"/></td>", 
-    		book.title, format.format(book.price)));
+    		anchor, format.format(book.price)));
     out.println("</tr>");
 }
 %>

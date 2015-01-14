@@ -1,4 +1,4 @@
-function addRowHandlers() {
+function addRowHandlers(book) {
     var table = document.getElementById("t01");
     var rows = table.getElementsByTagName("tr");
     for (i = 0; i < rows.length; i++) {
@@ -9,7 +9,7 @@ function addRowHandlers() {
                 return function() { 
                        var cell = row.getElementsByTagName("td")[0];
                        var title = cell.innerHTML;
-                       alert(title);
+                       alert(books.get(title).description);
                 };
             };
 
