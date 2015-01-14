@@ -64,7 +64,7 @@ table#t01 th {
 
 <table id="t01">
 <%
-out.print("<tr><th>Book title</th><th>Price</th></tr>"); 
+out.print("<tr><th>Price</th><th>Detailed Description</th></tr>"); 
 NumberFormat format = new DecimalFormat("#0.00");
 
 for (String[] arr : books) {

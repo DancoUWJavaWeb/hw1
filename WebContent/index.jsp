@@ -28,7 +28,7 @@ table#t01 th {
 </style>
 
 </head>
-<body onload="addRowHandlers()">
+<body>
 <%@ include file="book_data.jsp" %>
 
 <%
