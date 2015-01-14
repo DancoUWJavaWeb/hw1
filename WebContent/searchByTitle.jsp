@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.*,java.text.*" %>
+<%@ page session="true" import="java.util.*,java.util.logging.*,java.io.*,java.text.*" %>
+<% Logger logger = Logger.getLogger("details.jsp"); %>
 
 <html>
 <head>
@@ -35,11 +36,27 @@ if (cookies != null) {
 		}
 	}
 }
+
+String cartValueStr = null;
+String bookValue = request.getParameter("purchase");
+logger.info("Book value: " + bookValue);
+if (bookValue != null && bookValue.length() > 0) {
+	if (session.getAttribute("cart") == null) {
+		logger.info("Cart value set to: " + bookValue);
+		session.setAttribute("cart", bookValue);
+	} else {
+		Double cartValue = Double.parseDouble(session.getAttribute("cart").toString());
+		cartValue += Double.parseDouble(bookValue);
+		session.setAttribute("cart", cartValue);
+	}
+	cartValueStr = format.format(Double.parseDouble(session.getAttribute("cart").toString()));
+} 
+
 %>
 
 </head>
 <body>
-	<p>Hello <%= username == null ? "New User" : username %></p>
+	<p>Hello <%= username == null ? "New User" : username %> <%= cartValueStr == null ? "" : "Cart Total: " + cartValueStr%></p>
 
 <%	
 String title = request.getParameter("title");

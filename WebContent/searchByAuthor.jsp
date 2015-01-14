@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.*,java.text.*" %>
+<%@ page session="true" import="java.util.*,java.util.logging.*,java.io.*,java.text.*" %>
+<% Logger logger = Logger.getLogger("details.jsp"); %>
 
 <html>
 <head>
@@ -39,7 +40,7 @@ if (cookies != null) {
 
 </head>
 <body>
-	<p>Hello <%= username == null ? "New User" : username %></p>
+	<p>Hello <%= username == null ? "New User" : username %> <%= cartValueStr == null ? "" : "Cart Total: " + cartValueStr%></p>
 
 <%	
 String author = request.getParameter("author");

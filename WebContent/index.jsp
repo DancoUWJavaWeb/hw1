@@ -2,7 +2,8 @@
 	contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.*,java.io.*,java.text.*,java.util.concurrent.*" %>
+<%@ page session="true" import="java.util.*,java.util.logging.*,java.io.*,java.text.*" %>
+<% Logger logger = Logger.getLogger("details.jsp"); %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,6 +33,8 @@ table#t01 th {
 <%@ include file="book_data.jsp" %>
 
 <%
+	NumberFormat format = new DecimalFormat("#0.00");
+
 	Map<String,Book> bookMap = new HashMap<String,Book>(); 
 	
 	// Load the map from the array
@@ -53,17 +56,6 @@ table#t01 th {
 		response.addCookie(cookie);
 		username = name;
 	}
-	if (username == null){
-		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("username")) {
-					username = cookie.getValue();
-					//System.out.println("Found a username = " + username);
-				}
-			}
-		}
-	}
 	String reset = request.getParameter("logout");
 	if (reset != null && reset.equals("true")) {
 		Cookie[] cookies = request.getCookies();
@@ -72,11 +64,24 @@ table#t01 th {
 				if (cookie.getName().equals("username")) {
 					cookie.setMaxAge(0);
 					response.addCookie(cookie);
+					session.invalidate();
+					username = null;
+					logger.info("User logged out.");
 				}
 			}
 		}
 	}
-	
+	if (username == null && reset == null){
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("username")) {
+					username = cookie.getValue();
+					System.out.println("Found a username = " + username);
+				}
+			}
+		}
+	}	
 	boolean isSciFiSelected = true;
 	boolean isClassicsSelected = true;
 	boolean isFantasySelected = true;
@@ -91,9 +96,24 @@ table#t01 th {
 		isFantasySelected = genres.contains("fantasy");
 	}
 
+	String cartValueStr = null;
+	String bookValue = request.getParameter("purchase");
+	logger.info("Book value: " + bookValue);
+	if (bookValue != null && bookValue.length() > 0) {
+		if (session.getAttribute("cart") == null) {
+			logger.info("Cart value set to: " + bookValue);
+			session.setAttribute("cart", bookValue);
+		} else {
+			Double cartValue = Double.parseDouble(session.getAttribute("cart").toString());
+			cartValue += Double.parseDouble(bookValue);
+			session.setAttribute("cart", cartValue);
+		}
+		cartValueStr = format.format(Double.parseDouble(session.getAttribute("cart").toString()));
+	} 
+
 %>
 
-	<p>Hello <%= username == null ? "New User" : username %></p>
+	<p>Hello <%= username == null ? "New User" : username %> <%= cartValueStr == null ? "" : "Cart Total: " + cartValueStr%></p>
 	
 <% if (username == null)  {%>
 	<form method=POST action="index.jsp">
@@ -101,7 +121,7 @@ table#t01 th {
 		Password: <input type=password name=password size=32/><br>
 		<input type="submit" value="submit">			
 	</form>
-<% } else  {%>
+<% } else  { %>
 	<form method=POST action="index.jsp">
 	<input type=hidden name=logout value="true"/>
 	<input type=submit value="Logout"/>
@@ -113,7 +133,6 @@ table#t01 th {
 <table id="t01">
 <%
 out.print("<tr><th>Book title</th><th>Price</th></tr>"); 
-NumberFormat format = new DecimalFormat("#0.00");
 
 for (String[] arr : books) {
 	Book book = new Book(arr);
@@ -122,7 +141,7 @@ for (String[] arr : books) {
 	}
     out.print("<tr>");
     String anchor = String.format("<a href=\"details.jsp?title=%s\">%s</a>", book.title, book.title);
-    out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td><td><input type=\"submit\" name=\"purchase\" value=\"Add to Cart\"/></td>", 
+    out.print(String.format("<td>%s</td><td style=\"text-align:right\">%s</td>", 
     		anchor, format.format(book.price)));
     out.println("</tr>");
 }
