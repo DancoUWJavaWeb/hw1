@@ -73,8 +73,6 @@ String author = request.getParameter("author");
 <%
 out.print("<tr><th>Book title</th><th>Price</th></tr>"); 
 
-NumberFormat format = new DecimalFormat("#0.00");
-
 for (String[] arr : books) {
 	Book book = new Book(arr);
 	if (book.author.equalsIgnoreCase(author)) {

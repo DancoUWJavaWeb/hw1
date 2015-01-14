@@ -157,10 +157,10 @@ for (String[] arr : books) {
 
 <% if (username != null) { %>
 	<form method=POST action="searchByTitle.jsp">
-		Search by title: <input type=text name=title size=32/><input type="submit" value="submit">			
+		Search by title: <input type="text" name="title" size="32"/><input type="submit" value="submit">			
 	</form>
 	<form method=POST action="searchByAuthor.jsp">
-		Search by author: <input type=text name=author size=32/><input type="submit" value="submit">			
+		Search by author: <input type="text" name="author" size="32"/><input type="submit" value="submit">			
 	</form>
 <%} %>
 

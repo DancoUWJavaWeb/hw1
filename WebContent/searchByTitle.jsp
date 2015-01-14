@@ -68,12 +68,11 @@ if (username != null) {
 
 <%	
 String title = request.getParameter("title");
+logger.info("Book title: " + title);
  %>
 <table id="t01">
 <%
 out.print("<tr><th>Book title</th><th>Price</th></tr>"); 
-
-NumberFormat format = new DecimalFormat("#0.00");
 
 for (String[] arr : books) {
 	Book book = new Book(arr);
