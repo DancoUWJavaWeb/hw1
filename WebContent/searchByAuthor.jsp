@@ -36,6 +36,30 @@ if (cookies != null) {
 		}
 	}
 }
+
+NumberFormat format = new DecimalFormat("#0.00");
+
+String cartValueStr = null;
+
+if (username != null) {
+	String bookValue = request.getParameter("purchase");
+	logger.info("Book value: " + bookValue);
+	if (bookValue != null && bookValue.length() > 0) {
+		if (session.getAttribute("cart") == null) {
+			logger.info("Cart value set to: " + bookValue);
+			session.setAttribute("cart", bookValue);
+		} else {
+			Double cartValue = Double.parseDouble(session.getAttribute("cart").toString());
+			cartValue += Double.parseDouble(bookValue);
+			session.setAttribute("cart", cartValue);
+		}
+		cartValueStr = format.format(Double.parseDouble(session.getAttribute("cart").toString()));
+	} 
+} else {
+	cartValueStr = "NOT_LOGGED_IN";
+}
+
+
 %>
 
 </head>
