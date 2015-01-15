@@ -38,7 +38,7 @@
 
 	NumberFormat format = new DecimalFormat("#0.00");
 
-	String cartValueStr = null;
+	String cartValueStr = "0.00";
 	
 	if (username != null) {
 		String bookValue = request.getParameter("purchase");
@@ -86,7 +86,6 @@ table#t01 th {
 	<p>Hello <%= username == null ? "New User" : username %> <%= cartValueStr == "NOT_LOGGED_IN" ? "Please log in prior to purchasing." : "Cart Total: " + cartValueStr%></p>
 
 <table id="t01">
-<form name="purchaseForm" action="details.jsp" method="POST"></form>
 <%
 out.print("<tr><th>Price</th><th>Detailed Description</th></tr>"); 
 
